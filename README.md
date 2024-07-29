@@ -1,74 +1,95 @@
 # Labirent Q-Learn
 
-Bu proje, Q-öğrenme algoritmasını kullanarak bir labirent içinde hareket eden bir oyuncu (maymun) ve onun bir hedefi (muz) içeren bir oyun simülasyonudur. Proje, Python ve Pygame kütüphanesi kullanılarak geliştirilmiştir.
+Bu proje, Pygame ve Q-öğrenme algoritmasını kullanarak bir labirent oyununu oynayan bir yapay zeka ajanını simüle eder. Oyuncunun amacı, labirent içinde hareket ederek muzu bulmaktır.
 
-## Gereksinimler
+## İçindekiler
 
-Bu projeyi çalıştırmak için aşağıdaki gereksinimlere ihtiyacınız var:
-
-- Python 3.x
-- Pygame kütüphanesi
-- Numpy kütüphanesi
+- [Kurulum](#kurulum)
+- [Kullanım](#kullanım)
+- [Proje Açıklaması](#proje-açıklaması)
+  - [Ana Sınıf (`Main`)](#ana-sınıf-main)
+  - [Q-Öğrenme Parametreleri](#q-öğrenme-parametreleri)
+- [Katkıda Bulunma](#katkıda-bulunma)
+- [Lisans](#lisans)
+- [İletişim](#iletişim)
 
 ## Kurulum
 
-Öncelikle, gerekli kütüphaneleri kurmak için aşağıdaki komutları çalıştırın:
+Gerekli bağımlılıkları yüklemek için:
 
 ```bash
 pip install pygame numpy
 ```
 
-Projeyi klonlayın veya indirin ve çalışma dizininizde `images` klasöründe `monkey.bmp` ve `banana.bmp` dosyalarının bulunduğundan emin olun.
-
 ## Kullanım
 
-Proje dosyalarının bulunduğu dizine gidin ve aşağıdaki komutu çalıştırarak oyunu başlatın:
+Oyunu çalıştırmak için terminalden aşağıdaki komutu çalıştırın:
 
 ```bash
 python main.py
 ```
 
-Oyunu çalıştırdığınızda, labirent içinde hareket eden bir maymun ve bir muz göreceksiniz. Maymun, Q-öğrenme algoritmasını kullanarak labirent içinde hareket eder ve muza ulaşmaya çalışır. 
+## Proje Açıklaması
 
-## Dosya Açıklamaları
+Bu proje, Pygame kullanarak görselleştirilen bir labirentte Q-öğrenme algoritması ile oyuncunun muzu bulmaya çalıştığı bir oyun oluşturur. 
 
-- `main.py`: Oyun döngüsü ve Q-öğrenme algoritmasının bulunduğu ana dosya.
-- `labirentler.py`: Labirent yapılarını tanımlayan yardımcı dosya.
+### Ana Sınıf (`Main`)
 
-### main.py
+`Main` sınıfı, oyunun ana döngüsünü ve Q-öğrenme algoritmasını içerir.
 
-Bu dosya, oyunun ana mantığını ve Q-öğrenme algoritmasını içerir. İçerisinde şu sınıflar ve fonksiyonlar bulunur:
+#### `__init__(self)`
 
-#### Main Sınıfı
+- Pygame başlatılır ve oyun ekranı ayarlanır.
+- Başlangıç labirenti yüklenir.
+- Blok boyutu, oyuncu ve muzu başlangıç konumları ayarlanır.
+- Oyuncu ve muz görselleri yüklenir.
+- Q-öğrenme parametreleri ve Q-tablosu başlatılır.
+- İzleme için değişkenler tanımlanır.
 
-- `__init__(self)`: Pygame'i başlatır, ekranı ayarlar, labirenti yükler, oyuncu ve muzun başlangıç konumlarını belirler ve Q-öğrenme parametrelerini ayarlar.
-- `draw_maze(self)`: Labirenti ekrana çizer.
-- `draw_monkey(self)`: Oyuncuyu ekrana çizer.
-- `draw_banana(self)`: Muz'u ekrana çizer.
-- `move_player(self, action)`: Oyuncuyu verilen yönde hareket ettirir.
-- `update_q_table(self, state, action, reward, next_state)`: Q tablosunu günceller.
-- `choose_action(self, state)`: Epsilon-greedy politika ile hareket seçimi yapar.
-- `run(self)`: Oyun döngüsünü çalıştırır.
+#### `draw_maze(self)`
 
-### labirentler.py
+Labirenti ekranda çizer. 1 değeri beyaz (geçilebilir) alanı, 0 değeri siyah (duvar) alanı temsil eder.
 
-Bu dosya, labirent yapılarını tanımlar. `Maze` sınıfı içinde `maze` fonksiyonu ile çeşitli labirent yapıları oluşturulabilir.
+#### `draw_monkey(self)`
 
-## Q-Öğrenme Algoritması
+Oyuncuyu (maymun) ekranda çizer.
 
-Q-öğrenme, bir ajan (bu durumda maymun) ve bir ortam (bu durumda labirent) arasındaki etkileşimlerden öğrenen model tabanlı bir pekiştirmeli öğrenme algoritmasıdır. Ajan, ortamda gezinirken belirli bir politika izleyerek ödül alır ve bu ödüllere dayanarak gelecekteki hareketlerini optimize etmeye çalışır.
+#### `draw_banana(self)`
 
-Algoritmada kullanılan temel parametreler:
+Muzu ekranda çizer.
 
-- `alpha`: Öğrenme hızı
-- `gamma`: Gelecek ödüllerin bugünkü değeri
-- `epsilon`: Keşif oranı (epsilon-greedy politika için)
+#### `move_player(self, action)`
 
-## Görseller
+Verilen aksiyona göre oyuncuyu hareket ettirir. Eğer oyuncu muzun bulunduğu konuma gelirse, ödül verir ve labirenti yeniden başlatır.
 
-- `monkey.bmp`: Oyuncu karakterinin görseli
-- `banana.bmp`: Hedefin görseli
+#### `update_q_table(self, state, action, reward, next_state)`
+
+Q-tablosunu günceller. Temporal Difference (TD) öğrenme kuralını kullanarak Q-değerlerini hesaplar ve günceller.
+
+#### `choose_action(self, state)`
+
+Epsilon-Greedy politika ile aksiyon seçer. Belirli bir olasılıkla rastgele aksiyon, diğer durumda Q-tablosundaki en iyi aksiyon seçilir.
+
+#### `run(self)`
+
+Ana oyun döngüsünü yürütür. Oyuncu konumunu günceller, labirenti ve oyuncuyu çizer, Q-değerlerindeki değişiklikleri ekranda gösterir.
+
+### Q-Öğrenme Parametreleri
+
+- `alpha (öğrenme oranı)`: 0.1
+- `gamma (indirim faktörü)`: 0.9
+- `epsilon (keşif oranı)`: 0.1
+
+Bu parametreler, Q-öğrenme algoritmasının performansını etkiler ve farklı değerler denenerek optimize edilebilir.
+
+## Katkıda Bulunma
+
+Katkılarınızı memnuniyetle kabul ediyoruz! Lütfen katkıda bulunmadan önce [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun.
 
 ## Lisans
 
-Bu proje MIT Lisansı ile lisanslanmıştır. Detaylar için `LICENSE` dosyasını inceleyebilirsiniz.
+Bu proje MIT lisansı ile lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasını inceleyebilirsiniz.
+
+## İletişim
+
+Proje ile ilgili sorularınız için [uzayk204@gmail.com](mailto:uzayk204@gmail.com) adresinden iletişime geçebilirsiniz.
