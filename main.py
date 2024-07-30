@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 import sys
 from labirentler import Maze
-
+import time
 class Main:
     def __init__(self):
         # Pygame başlatılıyor ve ekran ayarlanıyor
@@ -23,8 +23,8 @@ class Main:
         self.banana_pos = [1, 7]
 
         # Görseller yükleniyor
-        self.player_image = pygame.image.load('images/monkey.bmp')
-        self.banana_image = pygame.image.load('images/banana.bmp')
+        self.player_image = pygame.image.load('C:/Users/uzayk/Downloads/Labirent_Q-Learn-main/Labirent_Q-Learn-main/images/monkey.bmp')
+        self.banana_image = pygame.image.load('C:/Users/uzayk/Downloads/Labirent_Q-Learn-main/Labirent_Q-Learn-main/images/banana.bmp')
 
         # Q-Öğrenme parametreleri ayarlanıyor
         self.alpha = 0.1
@@ -36,7 +36,8 @@ class Main:
         self.total_q_change = 0
         self.num_steps = 0
         self.sayac = 0
-
+        self.deneme=0
+        self.start_time = time.time()
     def draw_maze(self):
         # Labirenti çizen fonksiyon
         for row in range(len(self.labirent)):
@@ -65,6 +66,7 @@ class Main:
         # Yeni pozisyon geçerli mi kontrol ediliyor
         if (0 <= new_pos[0] < len(self.labirent[0])) and (0 <= new_pos[1] < len(self.labirent)) and (self.labirent[new_pos[1]][new_pos[0]] == 0):
             reward = -0.1
+
             if new_pos == self.banana_pos:
                 reward = 1
                 # Q tablosunu güncellemeden önce yeni durumu ve ödülü kullanın
@@ -83,6 +85,8 @@ class Main:
                 self.labirent = Maze.maze(self.labirent_baslangic)
                 self.player_pos = [1, 1]
                 self.sayac += 1
+                self.deneme += 1
+                self.start_time = time.time()
             else:
                 current_state = tuple(self.player_pos)
                 next_state = tuple(new_pos)
@@ -135,6 +139,29 @@ class Main:
                 text = font.render(f'Ortalama Q-Değeri Değişikliği: {avg_q_change:.4f}       Ödül: {self.sayac}', True, (0, 0, 0))
                 self.screen.blit(text, (10, 10))
 
+            
+            current_time = time.time()
+            elapsed_time = current_time - self.start_time
+            font = pygame.font.Font(None, 36)
+            elapsed_time_text = font.render(f'Geçen Süre: {elapsed_time:.2f} saniye ', True, (0, 0, 0))
+            deneme_txt=font.render(f'Deneme:{self.deneme}', True, (0, 0, 0))
+            epouch=deneme_txt.get_rect()
+            
+            text_rect = elapsed_time_text.get_rect()
+            text_rect.bottomleft = (10, 540 - 10)  # Alt sol köşe
+            epouch.bottomright=(540, 540 - 10)
+            self.screen.blit(elapsed_time_text, text_rect)
+            self.screen.blit(deneme_txt,epouch)
+            # Geçen süreyi hesapla
+            elapsed_time = current_time - self.start_time
+
+            # 10 saniye doldu mu kontrol et
+            if elapsed_time > 10:
+
+                self.labirent = Maze.maze(self.labirent_baslangic)
+                self.player_pos = [1, 1]
+                self.start_time= time.time()
+                self.deneme+=1
             pygame.display.flip()
 
 if __name__ == '__main__':
