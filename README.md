@@ -82,6 +82,10 @@ Ana oyun döngüsünü yürütür. Oyuncu konumunu günceller, labirenti ve oyun
 
 Bu parametreler, Q-öğrenme algoritmasının performansını etkiler ve farklı değerler denenerek optimize edilebilir.
 
+
+![image](Game.png)
+
+
 ## Katkıda Bulunma
 
 Katkılarınızı memnuniyetle kabul ediyoruz! Lütfen katkıda bulunmadan önce [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun.
