@@ -23,8 +23,8 @@ class Main:
         self.banana_pos = [1, 7]
 
         # Görseller yükleniyor
-        self.player_image = pygame.image.load('C:/Users/uzayk/Downloads/Labirent_Q-Learn-main/Labirent_Q-Learn-main/images/monkey.bmp')
-        self.banana_image = pygame.image.load('C:/Users/uzayk/Downloads/Labirent_Q-Learn-main/Labirent_Q-Learn-main/images/banana.bmp')
+        self.player_image = pygame.image.load('images/monkey.bmp')
+        self.banana_image = pygame.image.load('images/banana.bmp')
 
         # Q-Öğrenme parametreleri ayarlanıyor
         self.alpha = 0.1
